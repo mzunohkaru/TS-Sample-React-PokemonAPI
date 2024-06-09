@@ -1,25 +1,25 @@
-import useSWR from "swr";
-import { useState } from "react";
+import useSWRMutation from "swr/mutation";
+import { useState } from 'react';
 
 import { PokemonDetailed, ResponsePokemonAPI } from "../models/pokemon";
 import { fetcher } from "../lib/fetch";
 
-type UsePokemonSWRProps = {
+type UsePokemonMutationProps = {
   url: string;
   setNextUrl: (url: string) => void;
   setPrevUrl: (url: string) => void;
 };
 
-export function usePokemonSWR({
+export function usePokemonMutation({
   url,
   setNextUrl,
   setPrevUrl,
-}: UsePokemonSWRProps) {
+}: UsePokemonMutationProps) {
   const [details, setDetails] = useState<PokemonDetailed[]>([]);
-
-  const { data, error, isLoading, isValidating } = useSWR(url, fetcher, {
+  
+  const { trigger, data, error } = useSWRMutation(url, fetcher, {
     onSuccess: async (data: ResponsePokemonAPI) => {
-      const fetchedDetails = await Promise.all(
+      const fetchedDetails: PokemonDetailed[] = await Promise.all(
         data.results.map((pokemon) =>
           fetch(pokemon.url).then((res) => res.json())
         )
@@ -32,9 +32,7 @@ export function usePokemonSWR({
     onError: (error) => {
       console.error("Error: fetching data", error);
     },
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
   });
 
-  return { data: details, error, isLoading, isValidating };
+  return { trigger, data: details, error };
 }
