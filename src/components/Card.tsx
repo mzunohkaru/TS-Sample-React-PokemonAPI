@@ -1,7 +1,7 @@
-import React from "react";
 import { PokemonDetailed } from "../models/pokemon";
 
 export const Card = ({ pokemon }: { pokemon: PokemonDetailed }) => {
+
   return (
     <div className="flex flex-col items-center p-4 bg-white rounded-lg shadow-2xl w-64 h-106">
       <img
