@@ -35,6 +35,8 @@ export function usePokemonSWR({
     onError: (error) => {
       console.error("Error: fetching data", error);
     },
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false
   });
 
   return { data, error, isLoading, isValidating };
